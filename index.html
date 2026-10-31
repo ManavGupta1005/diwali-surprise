@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="theme-color" content="#180527">
+  <title>A Little Diwali Surprise for You ✨ | Mumbai Darshan Gang</title>
+  
+  <!-- Google Fonts: Festive Serif & Modern Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:ital,wght@0,500;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Fullscreen Canvas Layers -->
+  <canvas id="ambientCanvas" aria-hidden="true"></canvas>
+  <canvas id="fireworksCanvas" aria-hidden="true"></canvas>
+  <canvas id="confettiCanvas" aria-hidden="true"></canvas>
+
+  <!-- Golden Transition Overlays -->
+  <div id="goldenRipple" class="golden-light-ripple" aria-hidden="true"></div>
+  <div id="goldenSweep" class="golden-sweep-overlay" aria-hidden="true"></div>
+
+  <!-- Persistent Background Music Player (Continuous across all 5 screens) -->
+  <audio id="bgMusicPlayer" loop preload="auto" src="assets/audio/diwali-instrumental.mp3"></audio>
+
+  <!-- Decorative Overhead Fairy Lights (Illuminates Sequentially) -->
+  <div class="fairy-lights-container" aria-hidden="true">
+    <div class="fairy-lights-wire"></div>
+    <div class="fairy-light-bulbs" id="fairyBulbsList">
+      <div class="bulb gold"></div>
+      <div class="bulb amber"></div>
+      <div class="bulb ruby"></div>
+      <div class="bulb warm"></div>
+      <div class="bulb gold"></div>
+      <div class="bulb ruby"></div>
+      <div class="bulb amber"></div>
+      <div class="bulb warm"></div>
+      <div class="bulb gold"></div>
+      <div class="bulb amber"></div>
+      <div class="bulb ruby"></div>
+      <div class="bulb warm"></div>
+      <div class="bulb gold"></div>
+      <div class="bulb ruby"></div>
+    </div>
+  </div>
+
+  <!-- Hanging Marigold Garland (Toran) — Clickable Easter Egg! -->
+  <div class="marigold-toran" id="marigoldToran" title="Tap flowers to release festive petals!">
+    <div class="toran-garland">
+      <div class="marigold-flower"></div>
+      <div class="marigold-flower alt"></div>
+      <div class="marigold-flower"></div>
+    </div>
+    <div class="toran-garland">
+      <div class="marigold-flower alt"></div>
+      <div class="marigold-flower"></div>
+      <div class="marigold-flower alt"></div>
+    </div>
+  </div>
+
+  <!-- Subtle Slow-Spinning Rangoli Watermark in Background (Clickable Easter Egg!) -->
+  <svg class="rangoli-watermark" id="rangoliWatermark" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg" title="Tap for starry Diwali sparkles!">
+    <circle cx="250" cy="250" r="230" stroke="#fcd34d" stroke-width="1.5" stroke-dasharray="8 6"/>
+    <circle cx="250" cy="250" r="190" stroke="#f59e0b" stroke-width="2"/>
+    <circle cx="250" cy="250" r="140" stroke="#fcd34d" stroke-width="1" stroke-dasharray="4 4"/>
+    <circle cx="250" cy="250" r="80" stroke="#fb923c" stroke-width="1.5"/>
+    <circle cx="250" cy="250" r="25" fill="#fcd34d" opacity="0.4"/>
+    <path d="M250 20 L270 120 L250 180 L230 120 Z" fill="#f59e0b" opacity="0.3"/>
+    <path d="M250 480 L270 380 L250 320 L230 380 Z" fill="#f59e0b" opacity="0.3"/>
+    <path d="M20 250 L120 270 L180 250 L120 230 Z" fill="#f59e0b" opacity="0.3"/>
+    <path d="M480 250 L380 270 L320 250 L380 230 Z" fill="#f59e0b" opacity="0.3"/>
+    <path d="M87 87 L165 145 L195 195 L145 165 Z" fill="#ea580c" opacity="0.25"/>
+    <path d="M413 87 L335 145 L305 195 L355 165 Z" fill="#ea580c" opacity="0.25"/>
+    <path d="M87 413 L165 355 L195 305 L145 335 Z" fill="#ea580c" opacity="0.25"/>
+    <path d="M413 413 L335 355 L305 305 L355 335 Z" fill="#ea580c" opacity="0.25"/>
+  </svg>
+
+  <!-- Top Navigation Bar & Sound Control -->
+  <header class="site-header">
+    <div class="header-brand" id="brandTitle">✨ Mumbai Darshan Gang</div>
+    <div class="header-controls">
+      <!-- Continuous Background Music & Volume Slider -->
+      <div class="music-control-group" id="musicControlGroup" title="Diwali Instrumental Background Music">
+        <button id="musicToggleBtn" class="music-btn" aria-label="Toggle background music" title="Play festive instrumental music">
+          <span id="musicIcon">🎵</span>
+          <span id="musicText">Music OFF</span>
+        </button>
+        <div class="volume-control-wrapper" title="Music Volume">
+          <span class="volume-icon" id="volumeIcon">🔉</span>
+          <input type="range" id="musicVolumeSlider" class="volume-slider" min="0" max="1" step="0.05" value="0.65" aria-label="Music volume">
+        </div>
+      </div>
+
+      <!-- Separate Tactile Sound Effects (SFX) Toggle -->
+      <button id="sfxToggleBtn" class="sound-btn active" aria-label="Toggle sound effects" title="Toggle interactive sound effects">
+        <span id="sfxIcon">🔔</span>
+        <span id="sfxText">SFX ON</span>
+      </button>
+
+      <!-- Easter egg secret wish button -->
+      <button id="easterEggBtn" class="easter-egg-btn" title="Discover a secret Mumbai Darshan Gang Diwali blessing!">🎁</button>
+    </div>
+  </header>
+
+  <!-- Navigation Progress Dots -->
+  <nav class="nav-dots" aria-label="Surprise screen progress">
+    <button class="nav-dot active" data-target="1" aria-label="Go to Screen 1: Light the Diya"></button>
+    <button class="nav-dot" data-target="2" aria-label="Go to Screen 2: Open Festive Gift"></button>
+    <button class="nav-dot" data-target="3" aria-label="Go to Screen 3: Your Fortune"></button>
+    <button class="nav-dot" data-target="4" aria-label="Go to Screen 4: Heartfelt Letter"></button>
+    <button class="nav-dot" data-target="5" aria-label="Go to Screen 5: College Family Finale"></button>
+  </nav>
+
+  <!-- Main Multi-Screen Surprise Container -->
+  <main class="main-wrapper">
+
+    <!-- ==========================================
+         SCREEN 1 — Light the Diya (Welcome & Intro Sequence)
+         ========================================== -->
+    <section class="screen active" data-screen="1" id="screen1" aria-labelledby="screen1-title">
+      <div class="card-container">
+        <div class="card-gold-line"></div>
+
+        <!-- Optional Personalized Friend Badge (if ?friend=friendXX is in URL) -->
+        <div id="friendBadge" class="personal-badge hidden stagger-in stagger-1">
+          <span>✨</span>
+          <span>A Diwali Surprise for <strong id="friendNamePlaceholder">Friend</strong></span>
+        </div>
+
+        <h1 id="screen1-title" class="title-large stagger-in stagger-1">A Little Diwali Surprise for You</h1>
+        
+        <p class="subtitle-festive stagger-in stagger-2">
+          "Because a little festive happiness should find its way to you, wherever you are."
+        </p>
+
+        <div class="festive-divider stagger-in stagger-2">
+          <span>🪔</span>
+        </div>
+
+        <div class="body-text stagger-in stagger-3">
+          <p>
+            Hope you've made it home, settled in, and are enjoying some well-deserved time with your family!
+          </p>
+          <p>
+            I thought I'd send a little something your way this Diwali. Nothing big, just a small reminder of the people and moments that make college special.
+          </p>
+        </div>
+
+        <!-- Prominent Interactive Animated Diya -->
+        <div class="diya-wrapper" id="welcomeDiya" title="Tap the diya to light up your Diwali surprise!">
+          <div class="flame-container" id="welcomeDiyaFlame">
+            <div class="flame-halo"></div>
+            <div class="flame-outer"></div>
+            <div class="flame-core"></div>
+          </div>
+          <!-- Detailed Brass Diya SVG -->
+          <svg class="diya-svg" viewBox="0 0 160 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15 32 C15 62, 50 75, 80 75 C110 75, 145 62, 145 32 C135 38, 95 44, 80 44 C65 44, 25 38, 15 32 Z" fill="url(#diyaBrassGrad1)"/>
+            <ellipse cx="80" cy="32" rx="65" ry="12" fill="url(#diyaRimGrad1)" stroke="#fcd34d" stroke-width="1.5"/>
+            <ellipse cx="80" cy="33" rx="54" ry="8" fill="#581c87" opacity="0.8"/>
+            <ellipse cx="80" cy="34" rx="44" ry="5" fill="#f59e0b" opacity="0.3"/>
+            <ellipse cx="80" cy="74" rx="30" ry="5" fill="#b45309"/>
+            <path d="M60 68 L64 74 L96 74 L100 68 Z" fill="#78350f"/>
+            <defs>
+              <linearGradient id="diyaBrassGrad1" x1="15" y1="32" x2="145" y2="75" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#b45309"/>
+                <stop offset="35%" stop-color="#f59e0b"/>
+                <stop offset="65%" stop-color="#fde047"/>
+                <stop offset="100%" stop-color="#92400e"/>
+              </linearGradient>
+              <linearGradient id="diyaRimGrad1" x1="15" y1="32" x2="145" y2="32" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#d97706"/>
+                <stop offset="50%" stop-color="#fef08a"/>
+                <stop offset="100%" stop-color="#b45309"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div id="diyaLightPrompt" class="diya-hint">Tap the diya to light up your Diwali surprise ✨</div>
+        </div>
+
+        <!-- Main Navigation Button (Revealed after lighting diya or directly visible) -->
+        <div id="openSurpriseContainer" class="stagger-in stagger-4">
+          <button id="btnOpenSurprise" class="btn-primary">
+            <span>Open Your Surprise</span>
+            <span>✨</span>
+          </button>
+        </div>
+
+        <!-- Decorative Bottom Diyas -->
+        <div class="diyas-row" aria-hidden="true">
+          <div class="interactive-diya" data-diya="row1">
+            <div class="small-flame"></div>
+            <svg viewBox="0 0 60 30" fill="none"><path d="M5 12 C5 24, 20 28, 30 28 C40 28, 55 24, 55 12 Z" fill="#d97706"/><ellipse cx="30" cy="12" rx="25" ry="5" fill="#fbbf24"/></svg>
+          </div>
+          <div class="interactive-diya" data-diya="row2">
+            <div class="small-flame"></div>
+            <svg viewBox="0 0 60 30" fill="none"><path d="M5 12 C5 24, 20 28, 30 28 C40 28, 55 24, 55 12 Z" fill="#d97706"/><ellipse cx="30" cy="12" rx="25" ry="5" fill="#fbbf24"/></svg>
+          </div>
+          <div class="interactive-diya" data-diya="row3">
+            <div class="small-flame"></div>
+            <svg viewBox="0 0 60 30" fill="none"><path d="M5 12 C5 24, 20 28, 30 28 C40 28, 55 24, 55 12 Z" fill="#d97706"/><ellipse cx="30" cy="12" rx="25" ry="5" fill="#fbbf24"/></svg>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SCREEN 2 — Open a Festive Gift
+         ========================================== -->
+    <section class="screen" data-screen="2" id="screen2" aria-labelledby="screen2-title">
+      <div class="card-container">
+        <div class="card-gold-line"></div>
+
+        <h2 id="screen2-title" class="title-medium">A Little Something for You</h2>
+
+        <div class="festive-divider">
+          <span>🌸</span>
+        </div>
+
+        <!-- Interactive 3D Gift Box Stage -->
+        <div class="gift-presentation-wrapper">
+          <div id="giftIntroPrompt" class="subtitle-festive">
+            "There's a little something waiting for you..."
+          </div>
+
+          <div class="interactive-gift-box" id="festiveGiftBox" title="Tap to open your gift!">
+            <div class="gift-bow">🎀</div>
+            <div class="gift-lid">
+              <div class="gift-ribbon-vertical"></div>
+            </div>
+            <div class="gift-box-base">
+              <div class="gift-ribbon-vertical"></div>
+            </div>
+          </div>
+          <div id="giftTapHint" class="diya-hint">Tap the gift to open ✨</div>
+        </div>
+
+        <!-- Rising Message Card Content (Revealed after opening gift) -->
+        <div class="gift-content-reveal" id="giftContentReveal">
+          <div class="body-text">
+            <p class="stagger-in stagger-1">
+              Between the lectures, assignments, random conversations and countless little moments, college becomes special because of the people we share it with.
+            </p>
+            <p class="body-highlight stagger-in stagger-2">
+              Just wanted to remind you that you're one of those people.
+            </p>
+            <p class="stagger-in stagger-3">
+              Hope this Diwali brings you lots of happiness, good food, laughter and some much-needed rest.
+            </p>
+            <p id="friendNotePlaceholder" class="subtitle-festive stagger-in stagger-3" style="margin-top: 1.25rem; font-size: 1rem;"></p>
+          </div>
+
+          <div style="margin: 2rem 0 1rem;">
+            <button id="btnMore1" class="btn-primary">
+              <span>There's More!</span>
+              <span>🎁</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SCREEN 3 — Your Diwali Fortune (Exciting Reveal & Blessings)
+         ========================================== -->
+    <section class="screen" data-screen="3" id="screen3" aria-labelledby="screen3-title">
+      <div class="card-container">
+        <div class="card-gold-line"></div>
+
+        <h2 id="screen3-title" class="title-medium">Your Diwali Fortune</h2>
+
+        <p class="subtitle-festive">
+          "Every Diwali surprise deserves a little fortune-telling. Let's see what the universe has planned for you!"
+        </p>
+
+        <div class="festive-divider">
+          <span>🔮</span>
+        </div>
+
+        <!-- Ornate Fortune Chest / Scroll Preview -->
+        <div class="fortune-chest-wrapper" id="fortuneChestWrapper">
+          <div class="fortune-scroll-preview" id="fortuneScrollPreview" title="Click to unveil your fortune!">
+            📜
+          </div>
+        </div>
+
+        <!-- Initial Reveal Button -->
+        <button id="btnRevealFortune" class="btn-primary">
+          <span>Reveal My Fortune</span>
+          <span>✨</span>
+        </button>
+
+        <!-- Fortune Display Box (Pop-in animation on reveal) -->
+        <div class="fortune-box">
+          <div id="fortuneCard" class="fortune-card hidden">
+            <div class="blessing-tag">✨ Your Diwali Blessing</div>
+            <span id="fortuneIcon" class="fortune-icon">🪔</span>
+            <div id="fortuneCategory" class="fortune-category">Destiny Forecast</div>
+            <p id="fortuneText" class="fortune-quote">
+              "Your next few days are officially reserved for happiness, relaxation and unlimited food."
+            </p>
+          </div>
+        </div>
+
+        <!-- Action buttons after reveal -->
+        <div id="fortuneActions" class="buttons-group hidden">
+          <button id="btnRevealAnother" class="btn-secondary">
+            <span>Draw Another Fortune 🎲</span>
+          </button>
+          <button id="btnContinueTo4" class="btn-primary">
+            <span>Continue 💫</span>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SCREEN 4 — Reveal a Heartfelt Message (Royal Letter & Wax Seal)
+         ========================================== -->
+    <section class="screen" data-screen="4" id="screen4" aria-labelledby="screen4-title">
+      <div class="card-container">
+        <div class="card-gold-line"></div>
+
+        <h2 id="screen4-title" class="title-medium">A Little More Love</h2>
+
+        <div class="festive-divider">
+          <span>💌</span>
+        </div>
+
+        <!-- Interactive Royal Envelope -->
+        <div class="envelope-interactive-container">
+          <div id="letterPrompt" class="subtitle-festive">
+            "A personal college note is waiting inside..."
+          </div>
+
+          <div class="royal-envelope" id="royalEnvelope" title="Tap the wax seal to read your letter!">
+            <div class="envelope-flap"></div>
+            <div class="wax-seal" id="waxSeal">💮</div>
+          </div>
+          <div id="envelopeHint" class="diya-hint">Tap the seal to open your letter ✨</div>
+        </div>
+
+        <!-- Parchment Letter Reveal (Unfolds out of envelope) -->
+        <div class="letter-content-reveal" id="letterContentReveal">
+          <div class="body-text">
+            <p class="stagger-in stagger-1">
+              Hope this Diwali brings you lots of happiness, laughter, good food and beautiful memories with your loved ones.
+            </p>
+            <p class="stagger-in stagger-2">
+              Enjoy your holidays, take care, and here's to making many more memories together!
+            </p>
+            <p class="body-highlight stagger-in stagger-3" style="font-size: 1.15rem; margin-top: 1.25rem;">
+              Really glad our paths crossed at college.
+            </p>
+          </div>
+
+          <div style="margin: 2.25rem 0 1rem;">
+            <button id="btnCelebrateTogether" class="btn-primary">
+              <span>Let's Celebrate Together</span>
+              <span>🎇</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SCREEN 5 — The Shared Group Finale (Grand Celebration)
+         ========================================== -->
+    <section class="screen" data-screen="5" id="screen5" aria-labelledby="screen5-title">
+      <div class="card-container" style="border-color: var(--gold-400); box-shadow: 0 18px 45px rgba(0, 0, 0, 0.6), 0 0 40px rgba(245, 192, 66, 0.25);">
+        <div class="card-gold-line"></div>
+
+        <div class="personal-badge stagger-in stagger-1">
+          <span>✨</span>
+          <span>Mumbai Darshan Gang</span>
+        </div>
+
+        <h2 id="screen5-title" class="title-large stagger-in stagger-1">Happy Diwali, Everyone!</h2>
+
+        <p class="subtitle-festive stagger-in stagger-2">
+          "Different homes, different celebrations, but one little college family."
+        </p>
+
+        <div class="festive-divider stagger-in stagger-2">
+          <span>🎆</span>
+        </div>
+
+        <div class="body-text">
+          <p class="stagger-in stagger-2">
+            Even though we're celebrating in different places, here's a little reminder that we're all part of the same bunch.
+          </p>
+          <p class="stagger-in stagger-3">
+            Here's to more memories, more laughter, surviving more lectures, assignments, placements and everything college throws our way.
+          </p>
+          <p class="stagger-in stagger-3">
+            Wishing everyone a Diwali filled with happiness, prosperity, good food and beautiful moments with their loved ones.
+          </p>
+          <p class="stagger-in stagger-4" style="margin-top: 1.25rem;">
+            Here's to making many more memories together.
+          </p>
+          <p class="title-medium stagger-in stagger-4" style="font-size: 1.45rem; margin-top: 1.5rem; letter-spacing: 0.5px;">
+            Have the happiest Diwali. ❤️
+          </p>
+        </div>
+
+        <!-- Action Buttons: Celebrate Again, Replay & Share -->
+        <div class="buttons-group" style="margin-top: 2rem;">
+          <button id="btnCelebrateAgain" class="btn-primary">
+            <span>Celebrate Again!</span>
+            <span>🎆</span>
+          </button>
+          <div style="display: flex; gap: 10px; width: 100%; justify-content: center; flex-wrap: wrap;">
+            <button id="btnReplay" class="btn-secondary" style="flex: 1; min-width: 140px;">
+              <span>Replay ↺</span>
+            </button>
+            <button id="btnCopyShareLink" class="btn-secondary" style="flex: 1; min-width: 140px;">
+              <span>Copy Group Link 🔗</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Clickable Row of Diyas (Visitors can light them one by one!) -->
+        <div class="diyas-row" id="finaleDiyasRow" style="margin-top: 2.5rem;" title="Tap each diya to light them up!">
+          <div class="interactive-diya" data-diya="finale1" title="Tap to light!">
+            <div class="small-flame"></div>
+            <svg viewBox="0 0 60 30" fill="none"><path d="M5 12 C5 24, 20 28, 30 28 C40 28, 55 24, 55 12 Z" fill="#d97706"/><ellipse cx="30" cy="12" rx="25" ry="5" fill="#fbbf24"/></svg>
+          </div>
+          <div class="interactive-diya" data-diya="finale2" title="Tap to light!">
+            <div class="small-flame"></div>
+            <svg viewBox="0 0 60 30" fill="none"><path d="M5 12 C5 24, 20 28, 30 28 C40 28, 55 24, 55 12 Z" fill="#d97706"/><ellipse cx="30" cy="12" rx="25" ry="5" fill="#fbbf24"/></svg>
+          </div>
+          <div class="interactive-diya" data-diya="finale3" title="Tap to light!">
+            <div class="small-flame"></div>
+            <svg viewBox="0 0 60 30" fill="none"><path d="M5 12 C5 24, 20 28, 30 28 C40 28, 55 24, 55 12 Z" fill="#d97706"/><ellipse cx="30" cy="12" rx="25" ry="5" fill="#fbbf24"/></svg>
+          </div>
+          <div class="interactive-diya" data-diya="finale4" title="Tap to light!">
+            <div class="small-flame"></div>
+            <svg viewBox="0 0 60 30" fill="none"><path d="M5 12 C5 24, 20 28, 30 28 C40 28, 55 24, 55 12 Z" fill="#d97706"/><ellipse cx="30" cy="12" rx="25" ry="5" fill="#fbbf24"/></svg>
+          </div>
+          <div class="interactive-diya" data-diya="finale5" title="Tap to light!">
+            <div class="small-flame"></div>
+            <svg viewBox="0 0 60 30" fill="none"><path d="M5 12 C5 24, 20 28, 30 28 C40 28, 55 24, 55 12 Z" fill="#d97706"/><ellipse cx="30" cy="12" rx="25" ry="5" fill="#fbbf24"/></svg>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Share Link Copied Toast Notification -->
+  <div id="shareToast" class="toast" role="status" aria-live="polite">
+    ✨ Website link copied to clipboard!
+  </div>
+
+  <!-- Easter Egg Secret Blessing Modal -->
+  <div id="secretModal" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-card">
+      <div class="fortune-icon">🪔</div>
+      <div class="blessing-tag">Secret Diwali Blessing Found!</div>
+      <h3 class="title-medium" style="font-size: 1.35rem; margin-bottom: 0.75rem;">A Little College Magic</h3>
+      <p class="body-text" style="font-size: 1.05rem; line-height: 1.6;">
+        "May your attendance miraculously stay above 75%, every group project member pull their weight, and your chai always stay hot and comforting!"
+      </p>
+      <button id="closeSecretModal" class="btn-primary" style="margin-top: 1rem; padding: 10px 24px; font-size: 0.95rem;">
+        <span>Shubh Deepawali ✨</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- JavaScript Modules -->
+  <script src="js/friends.js"></script>
+  <script src="js/fortunes.js"></script>
+  <script src="js/particles.js"></script>
+  <script src="js/fireworks.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
